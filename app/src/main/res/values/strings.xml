@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BookStoreApp</string>
+    <string name="add_book">Add book</string>
+    <string name="login">Login</string>
+</resources>
