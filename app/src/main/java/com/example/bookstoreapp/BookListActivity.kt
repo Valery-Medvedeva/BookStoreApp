@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.bookstoreapp.data.Book
 import com.example.bookstoreapp.data.RvAdapter
 import com.example.bookstoreapp.databinding.ActivityBookListBinding
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
@@ -20,11 +21,11 @@ import java.io.ByteArrayOutputStream
 
 class BookListActivity : AppCompatActivity() {
 
-    private val binding by lazy {
-        ActivityBookListBinding.inflate(layoutInflater)
-    }
-
+    private val binding by lazy { ActivityBookListBinding.inflate(layoutInflater) }
     private lateinit var rvAdapter: RvAdapter
+
+    private val auth by lazy { Firebase.auth }
+    private val fs by lazy { Firebase.firestore }
 
     private var bookList = mutableListOf<Book>()
 
@@ -34,7 +35,6 @@ class BookListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupRv()
-        val fs = Firebase.firestore
         val storage = Firebase.storage.reference.child("Book cover images")
 
         binding.addButton.setOnClickListener {
@@ -46,6 +46,11 @@ class BookListActivity : AppCompatActivity() {
                     addBookToCollection(fs, it.result)
                 }
             }
+        }
+        binding.signOutBtn.setOnClickListener {
+            auth.signOut()
+            val intent=LoginActivity.newIntent(this)
+            startActivity(intent)
         }
 
         listener = fs.collection("books").addSnapshotListener { value, error ->
@@ -86,7 +91,6 @@ class BookListActivity : AppCompatActivity() {
     }
 
     companion object {
-
         fun newIntent(context: Context) = Intent(context, BookListActivity::class.java)
     }
 }

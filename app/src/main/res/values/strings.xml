@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">BookStoreApp</string>
     <string name="add_book">Add book</string>
-    <string name="login">Login</string>
+    <string name="i_have_an_account_signin">I have an account.<font color="#F44336"> SignIn</font></string>
+    <string name="i_am_a_new_user_signup">I am a new user.<font color="#F44336"> SignUp</font></string>
+    <string name="enter_your_email_address">Enter your email address</string>
+    <string name="enter_the_password">Enter the password</string>
+    <string name="signout">SignOut</string>
 </resources>

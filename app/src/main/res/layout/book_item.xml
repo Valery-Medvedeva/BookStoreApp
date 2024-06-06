@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="7dp"
+    android:layout_marginEnd="7dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     android:background="@color/white"
     app:cardCornerRadius="10dp"
     app:cardUseCompatPadding="true"
@@ -24,8 +27,8 @@
         android:fontFamily="@font/adamina"
         android:padding="10dp"
         android:textAlignment="center"
-        android:textColor="#532518"
-        android:textSize="16sp"
+        android:textColor="#251F1D"
+        android:textSize="18sp"
         android:textStyle="bold"
         tools:text="Some book" />
 
