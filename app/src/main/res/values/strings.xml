@@ -6,4 +6,11 @@
     <string name="enter_your_email_address">Enter your email address</string>
     <string name="enter_the_password">Enter the password</string>
     <string name="signout">SignOut</string>
+    <string name="save">Save</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="imageurl">ImageUrl</string>
+    <string name="pick_image_from_gallery">+ Pick image from gallery</string>
 </resources>
