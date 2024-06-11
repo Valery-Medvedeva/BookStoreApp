@@ -13,4 +13,18 @@
     <string name="category">Category</string>
     <string name="imageurl">ImageUrl</string>
     <string name="pick_image_from_gallery">+ Pick image from gallery</string>
+    <string name="select_a_category">Select a category</string>
+    <string name="text">Text</string>
+    <string-array name="categories">
+        <item>Fiction</item>
+        <item>Non-fiction</item>
+        <item>Science fiction</item>
+        <item>Romance</item>
+        <item>Biography</item>
+        <item>Poetry</item>
+        <item>Mystery</item>
+        <item>Fantasy</item>
+        <item>Horror</item>
+        <item>Other</item>
+    </string-array>
 </resources>

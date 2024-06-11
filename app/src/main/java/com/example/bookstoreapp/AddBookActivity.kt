@@ -5,13 +5,15 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.bookstoreapp.data.Book
 import com.example.bookstoreapp.databinding.ActivityAddBookBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -37,36 +39,40 @@ class AddBookActivity : AppCompatActivity() {
     private var imageUrl = ""
     private lateinit var imageContract: ActivityResultLauncher<String>
 
+    override fun onResume() {
+        super.onResume()
+        val categories = resources.getStringArray(R.array.categories)
+        val arrayAdapter = ArrayAdapter(this, R.layout.drop_item, categories)
+        binding.autoCompleteTv.setAdapter(arrayAdapter)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        imageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { it ->
-            if (it != null) {
-                binding.imageFromGallery.setImageURI(it)
-                val task = storage.putBytes(bitmapToByteArray(this@AddBookActivity, it))
-                task.addOnSuccessListener { upload ->
-                    upload.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
-                        imageUrl = uri.toString()
-                    }
-                }
-            }
-        }
-
+        registerImageContract()
         observeLiveData()
         setListeners()
     }
 
     private fun setListeners() {
+        binding.autoCompleteTv.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                category = position.toString()
+                Log.d("PERA", "выбрали жанр книги")
+            }
         binding.pickImageBtn.setOnClickListener {
             imageContract.launch("image/*")
+            Log.d("PERA", " запустили уствновку картинки из галереи на обложку")
         }
         binding.saveBookBtn.setOnClickListener {
             if (inputFieldsIsNotEmpty()) {
                 viewModel.saveBook(
-                    fs, name, description, price, category, imageUrl)
+                    fs, name, description, price, category, imageUrl
+                )
+                Log.d("PERA", "сохранили книгу")
             } else {
                 Toast.makeText(this, "Fill in all the fields", Toast.LENGTH_LONG).show()
+                Log.d("PERA", "поля пустые")
             }
         }
     }
@@ -79,9 +85,30 @@ class AddBookActivity : AppCompatActivity() {
         return baos.toByteArray()
     }
 
+    private fun registerImageContract(){
+        imageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { it ->
+            if (it != null) {
+                val task=storage
+                    .child(it.lastPathSegment.toString())
+                    .putBytes(bitmapToByteArray(this@AddBookActivity, it))
+                task.addOnSuccessListener { upload ->
+                    upload.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
+                        imageUrl = uri.toString()
+                        Log.d("PERA", "сохранили картинку в хранилище")
+                    }
+                }.addOnFailureListener {
+                    Log.d("PERA", "The image could not be saved to the storage")
+                }
+                binding.imageFromGallery.setImageURI(it)
+                Log.d("PERA", "установили картинку из галереи на обложку")
+            }
+        }
+    }
+
     private fun observeLiveData() {
         viewModel.isSuccess.observe(this) {
             Toast.makeText(this, "The book has been added", Toast.LENGTH_LONG).show()
+            Log.d("PERA", "книга добавлена- выведен тост")
             val intent = BookListActivity.newIntent(this)
             startActivity(intent)
             finish()
@@ -95,7 +122,6 @@ class AddBookActivity : AppCompatActivity() {
         name = binding.etName.text.toString().trim()
         description = binding.etDescription.text.toString().trim()
         price = binding.etPrice.text.toString().trim()
-        category = binding.etCategory.text.toString().trim()
         return (name.isNotEmpty()
                 && description.isNotEmpty()
                 && price.isNotEmpty()

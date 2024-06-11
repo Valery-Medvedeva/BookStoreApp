@@ -17,7 +17,7 @@ class AddBookViewModel:ViewModel() {
 
     fun saveBook(fs: FirebaseFirestore,
                  name:String, description:String, price:String, category:String, imageUrl:String){
-        fs.collection(Const.BOOK).document().set(
+        fs.collection(Const.BOOKS).document(name).set(
             Book(name, description, price, category, imageUrl)
         )
             .addOnSuccessListener { _isSuccess.value=Unit }
